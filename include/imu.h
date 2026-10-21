@@ -36,9 +36,9 @@ typedef enum {
 
 typedef enum {
     LSM6DSOX_GYRO_250DPS  = 0x0,
-    LSM6DSOX_GYRO_500DPS  = 0x2,
-    LSM6DSOX_GYRO_1000DPS = 0x3,
-    LSM6DSOX_GYRO_2000DPS = 0x1,
+    LSM6DSOX_GYRO_500DPS  = 0x1,
+    LSM6DSOX_GYRO_1000DPS = 0x2,
+    LSM6DSOX_GYRO_2000DPS = 0x3,
 } lsm6dsox_gyro_range_t;
 
 //  Data

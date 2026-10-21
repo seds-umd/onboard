@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-21",
+  "upstream_onboard_commit": "01c49fb275a91b4513ef9af124164a642fa63353",
+  "target": "pico2 / rp2350-arm-s",
+  "target_builds": {
+    "blink": "PASS",
+    "sos": "PASS",
+    "imu": "PASS",
+    "pico_sensors": "PASS"
+  },
+  "host_checks": {
+    "sos_waveform_and_6800_release_times": "PASS",
+    "onboard_allocation_init_read_no_data_success": "PASS",
+    "gyro_all_four_register_bytes_and_conversions": "PASS"
+  },
+  "patch_apply_check": "PASS",
+  "displayed_snippets_equal_built_sources": true,
+  "hardware_flash_or_run": false,
+  "public_artifact_republished": false,
+  "source_checkout_mutated": false,
+  "sha256": {
+    "README.md": "7b7357d8c588883675ee0acb9fa359d1fc8933750cfbf81cad851b88b7e1abac",
+    "examples/CMakeLists.txt": "9b105320125a1e4f4f0de3a1f9620dd3ef88016d0ab77351dd8bfd294eed0b1b",
+    "examples/blink.c": "0337cf918fed1e4e0b4fce6d7f56714a946e65b90e05eb6c90c183422f7b7afa",
+    "examples/imu.c": "a930f960bb66db882a7f4dec6df3c263250ce640e4e9c85ed2d41430126c6d13",
+    "examples/sos.c": "7f827fb5c1b163c0f4d2a245b041841ce08503c26ef593dca3f38600e4b9b8b2",
+    "onboard-main.patch": "5a858c082f4241f1b353c0c0a6c64f93f5527d5dbc739796492d68152ce9b898",
+    "onboard-source/CMakeLists.txt": "8c36d31c30e127cb3042d8bbb9b33cd5b2b7405275b7ff01886620b2fdfa4088",
+    "onboard-source/include/baro.h": "aa15d2ff3d9bd2cdfafca3f705593ce4582642fa4dae626d63d9c106db397e7b",
+    "onboard-source/include/imu.h": "0e7350114e4a3e52d920065f54666732ffbdc64bcae0fc7ec43068d6e0f3412c",
+    "onboard-source/include/mag.h": "8384909932a84e14c039cd6d98f11612b5983d3ec87cd122b1c6adf405d85e2f",
+    "onboard-source/src/baro.c": "a33182f0a0b43ae5daa2ce7ed5c52a7ac2caee2e5bcec97fad7433985e792ae5",
+    "onboard-source/src/imu.c": "ea84522819243c13135ed494ae91efee3c376e664a95fd63a2d5427d15a21abe",
+    "onboard-source/src/mag.c": "de2d9b5aacb4c95d7daf6fd509fa0c64210888d7de2439f8888ab90756a4ffc5",
+    "onboard-source/src/main.c": "5804c06c13a9f9c7829dcb6a03f1668984e22e91898efdf822b631aee60254ee",
+    "sessions.html": "8ef4f8be5cf02d127cae259b414feeb1a5bc98eb90188f6a94b00859ae35c5db",
+    "start-here.html": "b2349334669566b390909d32798128a164fea35c61800b190c6d8be39f343cf2"
+  }
+}
