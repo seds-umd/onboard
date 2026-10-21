@@ -1,0 +1,2 @@
+# Unified patch context lines intentionally contain one leading space.
+docs/onboarding-corrections/onboard-main.patch whitespace=-blank-at-eol

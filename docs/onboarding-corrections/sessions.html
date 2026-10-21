@@ -1,0 +1,683 @@
+<title>Avionics: the sessions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one 760px column with a sticky session strip. The code blocks are the content, so they get the most care. */
+:root{
+  --bg:#f2f4f1; --sheet:#ffffff; --sunk:#e6eae6;
+  --ink:#16211b; --ink-2:#44524a; --ink-3:#6b786f; --line:#d3dad5;
+  --accent:#0b6b5c; --accent-soft:#def0ea;
+  --warn:#9a4a1f; --warn-soft:#f8e9dd;
+  --ok:#2b7349; --ok-soft:#e1efe5;
+  --sda:#1d6fd6; --scl:#a96a00; --vin:#c9372c;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Atkinson Hyperlegible","Helvetica Neue",Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0f1512; --sheet:#161d19; --sunk:#1f2823;
+    --ink:#e6ece8; --ink-2:#b3bfb7; --ink-3:#83908a; --line:#2a3530;
+    --accent:#5fc9b4; --accent-soft:#14302a;
+    --warn:#e8a06f; --warn-soft:#30201a;
+    --ok:#7ccf9a; --ok-soft:#17291d;
+    --sda:#7cb6ff; --scl:#f0b454; --vin:#ff8a7a;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0f1512; --sheet:#161d19; --sunk:#1f2823;
+  --ink:#e6ece8; --ink-2:#b3bfb7; --ink-3:#83908a; --line:#2a3530;
+  --accent:#5fc9b4; --accent-soft:#14302a;
+  --warn:#e8a06f; --warn-soft:#30201a;
+  --ok:#7ccf9a; --ok-soft:#17291d;
+    --sda:#7cb6ff; --scl:#f0b454; --vin:#ff8a7a;
+}
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased}
+.wrap{max-width:760px; margin:0 auto; padding-inline:16px; padding-block:0 64px}
+h1,h2,h3,h4{font-family:var(--display); margin:0; text-wrap:balance; line-height:1.1}
+h1{font-size:clamp(32px,7vw,44px); font-weight:700}
+h2{font-size:clamp(24px,4.5vw,30px); font-weight:700}
+h3{font-size:20px; font-weight:700}
+h4{font-size:16px; font-weight:700; font-family:var(--body)}
+p{margin:0}
+a{color:var(--accent); text-decoration:underline; text-underline-offset:2px}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:3px}
+code{font-family:var(--mono); font-size:.86em; background:var(--sunk); padding:1px 5px; border-radius:3px}
+.eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3)}
+.lede{color:var(--ink-2); font-size:17px; max-width:60ch}
+
+/* header */
+.head{display:flex; flex-direction:column; gap:12px; padding-block:28px 20px}
+.facts{display:flex; flex-wrap:wrap; gap:8px}
+.fact{background:var(--sheet); border:1px solid var(--line); border-radius:4px; padding:6px 10px; font-size:13.5px; color:var(--ink-2)}
+.fact b{color:var(--ink); font-weight:700}
+.pages{display:flex; flex-wrap:wrap; gap:8px}
+.pages a{font-family:var(--mono); font-size:12px; letter-spacing:.03em; text-decoration:none; border:1px solid var(--line); border-radius:4px; padding:6px 10px; color:var(--ink-2); background:var(--sheet)}
+.pages a:hover{border-color:var(--accent); color:var(--accent)}
+
+/* sticky strip */
+.strip{position:sticky; top:env(safe-area-inset-top,0px); z-index:20; background:var(--sheet); border-top:1px solid var(--line); border-bottom:1px solid var(--line); margin-inline:-16px; padding-inline:16px}
+.strip-in{max-width:760px; margin:0 auto; display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding-block:8px}
+.strip nav{display:flex; gap:4px; flex-wrap:wrap; flex:1}
+.strip nav a{font-family:var(--mono); font-size:12px; text-decoration:none; color:var(--ink-2); padding:5px 8px; border-radius:3px}
+.strip nav a:hover{background:var(--sunk); color:var(--ink)}
+.count{font-family:var(--mono); font-size:12.5px; color:var(--ink-2); font-variant-numeric:tabular-nums; white-space:nowrap}
+.btn{font:500 12px var(--mono); letter-spacing:.04em; text-transform:uppercase; background:var(--sheet); color:var(--ink-2); border:1px solid var(--line); border-radius:4px; padding:6px 9px; cursor:pointer}
+.btn:hover{border-color:var(--ink-3); color:var(--ink)}
+
+main{display:flex; flex-direction:column; gap:40px; padding-top:28px}
+section{display:flex; flex-direction:column; gap:14px}
+.sec-head{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; border-bottom:2px solid var(--accent); padding-bottom:6px}
+.sec-head .eyebrow{color:var(--accent)}
+.who{color:var(--ink-2); max-width:62ch}
+
+/* steps */
+.steps{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px}
+.step{background:var(--sheet); border:1px solid var(--line); border-radius:6px; padding:12px 14px; display:flex; flex-direction:column; gap:8px; min-width:0}
+.step > label{display:flex; gap:12px; align-items:flex-start; cursor:pointer}
+.step input[type=checkbox]{appearance:none; -webkit-appearance:none; flex:none; width:22px; height:22px; margin:1px 0 0; border:2px solid var(--accent); border-radius:4px; background:var(--sheet); display:grid; place-items:center; cursor:pointer}
+.step input[type=checkbox]:checked{background:var(--accent)}
+.step input[type=checkbox]:checked::after{content:""; width:6px; height:11px; border:solid var(--sheet); border-width:0 2.5px 2.5px 0; transform:translate(0,-1px) rotate(45deg)}
+.step .t{font-weight:700}
+.step.done .t{color:var(--ink-3); text-decoration:line-through; text-decoration-thickness:1px}
+.step .d{color:var(--ink-2); font-size:15px; margin-left:34px}
+.step .d p + p{margin-top:6px}
+@media (max-width:480px){ .step .d{margin-left:0} }
+
+/* code */
+.code{position:relative; background:var(--sunk); border:1px solid var(--line); border-radius:5px; margin-left:34px; min-width:0}
+@media (max-width:480px){ .code{margin-left:0} }
+.code pre{margin:0; padding:12px 14px; padding-right:72px; overflow-x:auto; font-family:var(--mono); font-size:13px; line-height:1.55; color:var(--ink)}
+.code .copy{position:absolute; top:8px; right:8px; font:500 11px var(--mono); letter-spacing:.04em; text-transform:uppercase; background:var(--sheet); color:var(--ink-2); border:1px solid var(--line); border-radius:3px; padding:4px 7px; cursor:pointer}
+.code .copy:hover{color:var(--accent); border-color:var(--accent)}
+.code .lab{position:absolute; top:-9px; left:12px; font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); background:var(--sunk); padding:0 5px}
+.code.labelled pre{padding-top:16px}
+.os{display:flex; gap:6px; flex-wrap:wrap; margin-left:34px}
+@media (max-width:480px){ .os{margin-left:0} }
+.os span{font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; border:1px solid var(--line); border-radius:20px; padding:3px 9px; color:var(--ink-2)}
+
+/* notes */
+.note{font-size:14.5px; color:var(--ink-2); background:var(--sunk); border-radius:5px; padding:10px 12px}
+.note b{color:var(--ink)}
+.note.warn{background:var(--warn-soft)}
+.note.warn b{color:var(--warn)}
+.note.lead{background:var(--accent-soft); border-left:3px solid var(--accent)}
+.note.lead b{color:var(--accent)}
+
+/* tables */
+.tbl{overflow-x:auto; border:1px solid var(--line); border-radius:6px; background:var(--sheet)}
+table{border-collapse:collapse; width:100%; font-size:14.5px; min-width:420px}
+th,td{text-align:left; padding:9px 12px; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); font-weight:500}
+tr:last-child td{border-bottom:0}
+td.m{font-family:var(--mono); font-size:13px; font-variant-numeric:tabular-nums; white-space:nowrap}
+
+/* cards */
+.cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:10px}
+.card{background:var(--sheet); border:1px solid var(--line); border-radius:6px; padding:12px 14px; display:flex; flex-direction:column; gap:6px; min-width:0}
+.card .state{font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent)}
+.card p{color:var(--ink-2); font-size:14.5px}
+.card .start{font-size:14px; color:var(--ink)}
+.card .start b{color:var(--accent)}
+
+/* people */
+.people{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:8px}
+.person{background:var(--sheet); border:1px solid var(--line); border-radius:6px; padding:10px 12px; font-size:14.5px; color:var(--ink-2)}
+.person b{color:var(--ink); display:block}
+
+/* trouble */
+.trouble{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px}
+.trouble li{background:var(--sheet); border:1px solid var(--line); border-radius:6px; padding:10px 12px; font-size:14.5px; color:var(--ink-2)}
+.trouble li b{color:var(--ink); display:block; font-family:var(--mono); font-size:13px; font-weight:500; margin-bottom:3px}
+
+/* sheet */
+.sheet-tbl table{min-width:640px}
+.sheet-tbl input[type=text]{width:100%; min-width:140px; font:inherit; font-size:14.5px; color:var(--ink); background:transparent; border:0; border-bottom:1px solid var(--line); padding:4px 2px}
+.sheet-tbl input[type=text]::placeholder{color:var(--ink-3)}
+.sheet-tbl input[type=checkbox]{width:20px; height:20px; accent-color:var(--accent); cursor:pointer}
+.sheet-tbl td.c{text-align:center}
+.sheet-tbl th.c{text-align:center; white-space:nowrap}
+
+/* figures */
+.fig{margin:0 0 0 34px; background:var(--sheet); border:1px solid var(--line); border-radius:6px; padding:12px 14px; display:flex; flex-direction:column; gap:8px; min-width:0}
+.fig.wide{margin-left:0}
+@media (max-width:480px){ .fig{margin-left:0} }
+.fig svg{width:100%; height:auto; max-width:100%; color:var(--ink); display:block; font-family:var(--body)}
+.fig figcaption{font-size:13.5px; color:var(--ink-2)}
+/* lead card */
+.leadcard{background:var(--accent-soft); border:1px solid var(--line); border-radius:6px; padding:14px 16px; display:flex; flex-direction:column; gap:10px}
+.leadcard .eyebrow{color:var(--accent)}
+.leadgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px}
+.leadgrid h4{margin-bottom:4px}
+.leadgrid ul{margin:0; padding-left:18px; font-size:14px; color:var(--ink-2); display:flex; flex-direction:column; gap:4px}
+footer{border-top:1px solid var(--line); margin-top:44px; padding-block:18px; color:var(--ink-3); font-size:12.5px; display:flex; gap:12px; justify-content:space-between; flex-wrap:wrap}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+
+<header class="head">
+  <div class="eyebrow">SATFAB · Avionics subteam · <a href="https://seds.umd.edu/">SEDS@UMD</a> · Fall 2026</div>
+  <h1>Avionics: the sessions</h1>
+  <p class="lede">The first two avionics sessions, written down so you can do them at your own pace or catch up if you missed one. Session one gets you a shell that builds Pico firmware: Ubuntu, WSL on Windows, or Terminal on a Mac. Session two puts a Pico 2 and a motion sensor on a breadboard and reads it over I2C. After that you pick real work on the fall balloon payload.</p>
+  <div class="facts">
+    <span class="fact"><b>Wednesdays, 6:00 pm</b> · Cypress, the avionics station in the workshop</span>
+    <span class="fact">Bring <b>your laptop</b> and a <b>micro-USB data cable</b></span>
+    <span class="fact">Balloon launch target <b>Nov 7 to 8</b>, tentative</span>
+  </div>
+  <div class="pages">
+    <a href="start-here.html">1 · Start here</a>
+    <a href="https://claude.ai/artifact/KEMmX8K1wVGGwrST2evCQN">2 · The work</a>
+    <a href="https://claude.ai/artifact/CcGw1HYPkyDe2Usyf56KCp">3 · Glossary</a>
+    <a href="https://wiki.seds.umd.edu/">Club wiki</a>
+    <a href="https://github.com/seds-umd">seds-umd on GitHub</a>
+  </div>
+  <p class="note">This page is the short version of what happened in the room. <a href="start-here.html">Start here</a> has the same setup in full, with the fixes for the ways it breaks, and the five-step intro project. Use that one when something on this page is not enough.</p>
+
+  <div class="leadcard">
+    <div class="eyebrow">For whoever is running the session</div>
+    <div class="leadgrid">
+      <div><h4>Bring</h4><ul>
+        <li>A Pico 2 and a data cable per person, plus two spares.</li>
+        <li>Two LSM6DSOX breakouts, breadboards, jumper wires, two STEMMA QT cables, and STEMMA QT to male-jumper cables if the breakouts have no headers soldered.</li>
+        <li>One set wired and known good before anyone arrives.</li>
+        <li>This page on a screen, and the GitHub org page open for invites.</li></ul></div>
+      <div><h4>Order of play</h4><ul>
+        <li>0:00 accounts, cables, Wi-Fi. Start the SDK clone first.</li>
+        <li>0:10 session one. Talk while it downloads.</li>
+        <li>0:50 session two. Wire, build, flash, read.</li>
+        <li>1:20 hand out first pull requests. Tick the session sheet.</li></ul></div>
+      <div><h4>When it breaks, check in this order</h4><ul>
+        <li>The cable.</li>
+        <li>SDA and SCL swapped.</li>
+        <li>WSL cannot see USB (usbipd).</li>
+        <li>PICO_SDK_PATH in the wrong shell file.</li>
+        <li>A Mac without an admin password on the Homebrew route; send them to route B or C.</li></ul></div>
+    </div>
+    <p class="note" style="background:transparent; padding:0">Every command on this page was run again on a MacBook on 13 October with pico-sdk 2.3.1, CMake 4.4 and Arm GCC 15.3. Both builds produced their .uf2.</p>
+  </div>
+</header>
+
+<div class="strip">
+  <div class="strip-in">
+    <nav>
+      <a href="#before">Before</a>
+      <a href="#mac">Mac</a>
+      <a href="#session1">1 · Terminal</a>
+      <a href="#session2">2 · Breadboard</a>
+      <a href="#after">What's next</a>
+      <a href="#trouble">When it breaks</a>
+      <a href="#sheet">Session sheet</a>
+    </nav>
+    <span class="count" id="count">0 of 0 done</span>
+    <button class="btn" id="clear" type="button">Clear ticks</button>
+  </div>
+</div>
+
+<main>
+
+<section id="before">
+  <div class="sec-head"><span class="eyebrow">00 · Before you come</span><h2>Four things that take time</h2></div>
+  <p class="who">All of these have a lag on someone else's side, so start them now rather than the day you need them.</p>
+  <ul class="steps">
+    <li class="step"><label><input type="checkbox" id="b1"><span class="t">Post your GitHub username in the avionics channel</span></label>
+      <div class="d"><p>Most of our repositories are private, so links to them show a 404 until you are in the <a href="https://github.com/seds-umd">seds-umd organization</a>. You get an email invite and you have to accept it. The two repositories the sessions use, <a href="https://github.com/seds-umd/obc-firmware">obc-firmware</a> and <a href="https://github.com/seds-umd/onboard">onboard</a>, are public, so you can do everything below before the invite lands.</p></div></li>
+    <li class="step"><label><input type="checkbox" id="b2"><span class="t">Join SEDS@UMD on TerpLink</span></label>
+      <div class="d"><p><a href="https://terplink.umd.edu/">terplink.umd.edu</a>, search for SEDS, request to join. This is what formally makes you a member.</p></div></li>
+    <li class="step"><label><input type="checkbox" id="b3"><span class="t">Enrol in the Cypress access Canvas course</span></label>
+      <div class="d"><p>Swipe access to the lab comes from a Canvas course, not a form. The link and QR code are in the Discord. Until it goes through, message the channel when you are outside and someone lets you in. Zarif's station is in the workshop, not the conference room.</p></div></li>
+    <li class="step"><label><input type="checkbox" id="b4"><span class="t">Get a micro-USB cable that carries data</span></label>
+      <div class="d"><p>The Pico 2 has a micro-USB port. Charge-only cables look identical and are the usual reason a board never shows up on a laptop. The lab is short on them, which is why Zarif asked people to bring their own.</p></div></li>
+    <li class="step"><label><input type="checkbox" id="b5"><span class="t">Windows: install Ubuntu from the Microsoft Store before the session</span></label>
+      <div class="d"><p>Everything in session one happens in a Linux shell. On Windows that is WSL, and the download is the slow part. Install <a href="https://apps.microsoft.com/detail/9pn20msr04dw">Ubuntu 22.04</a>, open it once, set a username and password, and you are ready. macOS and Linux need nothing in advance except <code>xcode-select --install</code> on a Mac. If a Mac is the only computer you have, read <a href="#mac">the Mac section</a> first: everything on this page runs on it, and there is a route that needs no admin password. The full walk-through, including the WSL 2 check, is <a href="start-here.html#setup">on the start page</a>.</p></div></li>
+  </ul>
+</section>
+
+<section id="mac">
+  <div class="sec-head"><span class="eyebrow">00 · If your only computer is a Mac</span><h2>Everything here runs on macOS</h2></div>
+  <p class="who">No Windows machine, no Ubuntu, no virtual machine. Apple silicon or Intel, both work. Open Terminal (Applications, Utilities), take one of the three routes below, then continue with session one. Every block on this page that differs on a Mac has a macOS version next to it.</p>
+  <ul class="steps">
+    <li class="step"><label><input type="checkbox" id="m1"><span class="t">Route A: Homebrew, when you know the admin password</span></label>
+      <div class="code"><button class="copy" type="button">Copy</button><pre>xcode-select --install
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew install cmake git picotool
+brew install --cask gcc-arm-embedded
+arm-none-eabi-gcc --version</pre></div>
+      <div class="d"><p>The first line installs Apple's command line tools, which bring git and a C compiler for your own machine; click Install in the dialog and wait, and if it says they are already installed, good. The second line installs <a href="https://brew.sh/">Homebrew</a> if you do not have it and asks for your password. After the brew lines, open a new terminal window: the last command should print a version. Then go to session one, step 2.</p></div></li>
+    <li class="step"><label><input type="checkbox" id="m2"><span class="t">Route B: no admin password, for a managed or borrowed Mac</span></label>
+      <div class="code"><button class="copy" type="button">Copy</button><pre>xcode-select --install
+mkdir -p ~/pico ~/Applications &amp;&amp; cd ~/pico
+# download the "macOS (Apple silicon) hosted ... arm-none-eabi" .tar.xz from Arm's page (Intel Macs: darwin-x86_64), then:
+tar xf ~/Downloads/arm-gnu-toolchain-*-darwin-*-arm-none-eabi.tar.xz
+echo 'export PATH="$HOME/pico/'"$(ls -d arm-gnu-toolchain-*-arm-none-eabi | head -1)"'/bin:$PATH"' &gt;&gt; ~/.zshrc
+# open the CMake .dmg from cmake.org and drag CMake into the Applications folder in your home folder, then:
+echo 'export PATH="$HOME/Applications/CMake.app/Contents/bin:$PATH"' &gt;&gt; ~/.zshrc
+source ~/.zshrc
+arm-none-eabi-gcc --version &amp;&amp; cmake --version</pre></div>
+      <div class="d"><p><a href="https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads">Arm's download page</a> has the compiler, about 150 MB, and <a href="https://cmake.org/download/">cmake.org</a> has CMake as a .dmg. Nothing here touches a system folder, so no password is needed. Both version commands should print something; then go to session one, step 2. picotool is not available on this route without Homebrew, and you do not need it: the drag-and-drop flashing in session two works without it.</p></div></li>
+    <li class="step"><label><input type="checkbox" id="m3"><span class="t">Route C: VS Code with the Raspberry Pi Pico extension, no terminal setup</span></label>
+      <div class="d"><p>Install <a href="https://code.visualstudio.com/">VS Code</a>, then the <a href="https://marketplace.visualstudio.com/items?itemName=raspberry-pi.raspberry-pi-pico">Raspberry Pi Pico</a> extension from its Extensions panel. The extension downloads the SDK, the Arm compiler, CMake, Ninja and picotool into <code>~/.pico-sdk</code> by itself and needs no password. Click the Pico icon in the left bar, New Project From Example, choose <b>blink</b>, board <b>Pico 2</b>, then Compile in the bottom bar; Run flashes a board that is plugged in. For session two, Import Project on the cloned onboard folder and set the board to Pico 2.</p>
+      <p>This route keeps you out of the terminal, which is fine for the sessions. Plan on route A or B eventually: the flight firmware is built and reviewed as a plain CMake project from the command line.</p></div></li>
+    <li class="step"><label><input type="checkbox" id="m4"><span class="t">Flashing and the serial port on a Mac</span></label>
+      <div class="code"><button class="copy" type="button">Copy</button><pre>ls /dev/cu.usbmodem*
+screen /dev/cu.usbmodem* 115200</pre></div>
+      <div class="d"><p>Hold BOOTSEL, plug the Pico in, let go: a drive called <code>RP2350</code> appears in the Finder sidebar. Drag the <code>.uf2</code> onto it. The drive disappears on its own and macOS may complain that the disk was not ejected properly; that is normal. On route A, <code>picotool load -f -x build-pico2/blink/blink.uf2</code> does the same without touching the button, and needs no sudo on a Mac.</p>
+      <p>The serial port is <code>/dev/cu.usbmodem</code> followed by digits, and it only exists while your program is running, not in BOOTSEL mode. To leave <code>screen</code>, press ctrl-A, then K, then Y. Closing the window instead leaves the port held until you unplug the board.</p></div></li>
+    <li class="step"><label><input type="checkbox" id="m5"><span class="t">The other tools, for later</span></label>
+      <div class="d"><p><b>KiCad</b>, for the board files in bpp-fall2026-hw: the <a href="https://www.kicad.org/download/macos/">macOS download</a> is a .dmg. Drag KiCad into Applications, or into the Applications folder in your home folder if you cannot write to the system one. The club's symbol and footprint libraries live in <a href="https://github.com/seds-umd/kicad-library">seds-umd/kicad-library</a>; add them under Preferences, Manage Symbol Libraries and Manage Footprint Libraries. <b>Vivado</b>, for the FPGA lane, does not exist for macOS; that work happens on the lab PC in Cypress. <b>A debug probe</b> is not needed for anything on this page.</p></div></li>
+  </ul>
+  <p class="note">Route B was checked on a MacBook on 13 October with pico-sdk 2.3.1, CMake 4.4 and Arm GCC 15.3: blink and the onboard demo both built and flashed.</p>
+</section>
+
+<section id="session1">
+  <div class="sec-head"><span class="eyebrow">01 · Session one · 30 September</span><h2>The terminal</h2></div>
+  <p class="who">What Zarif had everyone run, in order. By the end you can turn C source into a file a Pico will run. Each block is one paste.</p>
+  <ul class="steps">
+    <li class="step"><label><input type="checkbox" id="s1"><span class="t">Install the compiler and build tools</span></label>
+      <div class="os"><span>Ubuntu / WSL</span></div>
+      <div class="code"><button class="copy" type="button">Copy</button><pre>sudo apt update &amp;&amp; sudo apt upgrade
+sudo apt install python3 git tar build-essential cmake gcc-arm-none-eabi libnewlib-arm-none-eabi</pre></div>
+      <div class="os"><span>macOS</span></div>
+      <div class="code"><button class="copy" type="button">Copy</button><pre>xcode-select --install
+brew install cmake git
+brew install --cask gcc-arm-embedded</pre></div>
+      <div class="os"><span>macOS, without an admin password</span></div>
+      <div class="code"><button class="copy" type="button">Copy</button><pre>mkdir -p ~/pico &amp;&amp; cd ~/pico
+# download the "macOS (Apple silicon) ... arm-none-eabi" .tar.xz from Arm's page, then:
+tar xf arm-gnu-toolchain-*-darwin-arm64-arm-none-eabi.tar.xz
+echo 'export PATH="$HOME/pico/'"$(ls -d arm-gnu-toolchain-*-arm-none-eabi | head -1)"'/bin:$PATH"' &gt;&gt; ~/.zshrc
+source ~/.zshrc
+arm-none-eabi-gcc --version</pre></div>
+      <div class="d"><p>The Homebrew cask asks for an administrator password, which a managed or borrowed Mac may not have. <a href="https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads">Arm's own download</a> needs none: unpack it under <code>~/pico</code> and put its <code>bin</code> folder on your path. Intel Macs take the <code>darwin-x86_64</code> file instead. Either way the last line should print a version.</p>
+      <p><code>gcc-arm-none-eabi</code> is the compiler that targets the ARM core on the Pico. <code>build-essential</code> is the compiler for your own machine, used by the unit tests. If the Mac cask fails, it is a clash with an older ARM toolchain; the fix is <a href="start-here.html#setup">on the start page, step 4</a>.</p></div></li>
+
+    <li class="step"><label><input type="checkbox" id="s2"><span class="t">Clone the Pico SDK and tell your shell where it is</span></label>
+      <div class="code"><button class="copy" type="button">Copy</button><pre>mkdir ~/pico
+cd ~/pico
+git clone https://github.com/raspberrypi/pico-sdk.git
+cd pico-sdk
+git submodule update --init
+cd ..
+echo export PICO_SDK_PATH=~/pico/pico-sdk &gt;&gt; ~/.bashrc
+source ~/.bashrc</pre></div>
+      <div class="d"><p>The submodule step pulls in TinyUSB and the rest, and it is not optional. It is also the slow step on the Cypress wifi.</p>
+      <p><b>On a Mac, or if your prompt says zsh,</b> the last two lines are <code>~/.zshrc</code> instead of <code>~/.bashrc</code>. Run <code>echo $SHELL</code> if you are not sure. Getting this wrong is the single most common reason the next step fails with <code>PICO_SDK_PATH not set</code>.</p></div></li>
+
+    <li class="step"><label><input type="checkbox" id="s3"><span class="t">Prove it works: build blink</span></label>
+      <div class="code"><button class="copy" type="button">Copy</button><pre>cd ~/pico
+git clone https://github.com/raspberrypi/pico-examples.git
+cd pico-examples
+cmake -S . -B build-pico2 -DPICO_BOARD=pico2
+cmake --build build-pico2 --target blink -j4</pre></div>
+      <div class="d"><p>The last line of output should be <code>[100%] Built target blink</code>, and you now have <code>build-pico2/blink/blink.uf2</code>. That file is a program. Session two puts one like it on a board. <code>-DPICO_BOARD=pico2</code> matters: the lab boards are Pico 2s, and a plain build targets the original Pico.</p></div></li>
+
+    <li class="step"><label><input type="checkbox" id="s4"><span class="t">Build picotool, so you can flash without touching the button</span></label>
+      <div class="os"><span>Ubuntu / WSL</span></div>
+      <div class="code"><button class="copy" type="button">Copy</button><pre>cd ~
+sudo apt install -y cmake gcc g++ git libusb-1.0-0-dev libftdi1-dev
+git clone https://github.com/raspberrypi/picotool.git
+cd picotool
+mkdir build
+cd build
+cmake ..
+make -j$(nproc)
+sudo make install</pre></div>
+      <div class="os"><span>macOS</span></div>
+      <div class="code"><button class="copy" type="button">Copy</button><pre>brew install picotool</pre></div>
+      <div class="d"><p><code>sudo apt install picotool</code> does not find a package on Ubuntu 22.04, which is why Zarif had everyone build it from source. It needs <code>PICO_SDK_PATH</code> from the previous step. <a href="https://github.com/raspberrypi/picotool">What picotool does</a>: loads a program over USB, reboots the board, and tells you what is on it.</p>
+      <p><b>WSL only:</b> Windows does not hand USB devices to Linux on its own. For picotool and the serial port you need <a href="https://github.com/dorssel/usbipd-win/releases">usbipd-win</a>, described in <a href="start-here.html#setup">step 7 on the start page</a>. The drag-and-drop method in session two needs none of that.</p></div></li>
+
+    <li class="step"><label><input type="checkbox" id="s5"><span class="t">Clone the flight computer firmware and look around</span></label>
+      <div class="code"><button class="copy" type="button">Copy</button><pre>cd ~
+git clone https://github.com/seds-umd/obc-firmware.git</pre></div>
+      <div class="d"><p>This is the firmware on the payload we delivered to the Naval Academy: an RP2040 flight computer with a command handler, a scheduler, flash logging and a radio driver. You are not building it today. Read <code>readme.md</code> and <code>src/main.c</code>, and notice that it is the same C, CMake and Pico SDK you just installed. The fall balloon firmware starts from pieces of it.</p></div></li>
+  </ul>
+  <p class="note lead"><b>If you are running the session.</b> Start people on the SDK clone first and talk while it downloads. The apt line and the clones are the only steps that need internet. Expect two kinds of failure: a leftover line in somebody's <code>~/.bashrc</code> from another course (one person hit a missing ROS setup script, which is harmless and is fixed by deleting the line) and <code>PICO_SDK_PATH</code> landing in the wrong shell file on a Mac.</p>
+</section>
+
+<section id="session2">
+  <div class="sec-head"><span class="eyebrow">02 · Session two · 7 October</span><h2>The breadboard</h2></div>
+  <p class="who">A Pico 2, an <a href="https://www.adafruit.com/product/4438">Adafruit LSM6DSOX breakout</a> (accelerometer and gyroscope), four wires, and a small program from Zarif's <a href="https://github.com/seds-umd/onboard">onboard</a> repository that reads it ten times a second. The payload's sensors look exactly like this.</p>
+
+  <ul class="steps">
+    <li class="step"><label><input type="checkbox" id="w0"><span class="t">What plugs into what</span></label>
+      <div class="d"><p>Four connections, and that is the whole rig.</p>
+      <p><b>Laptop to Pico 2:</b> the micro-USB data cable. The micro-USB end goes into the port on the Pico, the other end into your laptop, through a USB-C adapter if your laptop has no USB-A port. Power, flashing and the serial console all travel over this one cable.</p>
+      <p><b>Pico 2 to breadboard:</b> push the Pico into the breadboard so its two rows of pins straddle the trench down the middle, USB port facing the top edge. Every pin now has its own row of holes to plug wires into.</p>
+      <p><b>Pico 2 to sensor:</b> four jumper wires from the rows beside pins 1, 2, 3 and 36 to the breakout&#x27;s SDA, SCL, GND and VIN pads, as in the diagram below. A bare breakout needs header pins soldered on first; the no-soldering alternative is a STEMMA QT cable with male jumper ends plugged into the breakout&#x27;s socket (black GND, red V+, blue SDA, yellow SCL). Check which the lab kits have before people arrive.</p>
+      <p><b>Sensor to second sensor:</b> one STEMMA QT cable between their sockets. Nothing else to wire; they share the bus.</p></div></li>
+    <li class="step"><label><input type="checkbox" id="w1"><span class="t">Wire it: four wires, 3.3 volts, never 5</span></label>
+      <div class="d"><p>The program uses I2C bus 0 on GP0 and GP1. Pin numbers below are the physical count on the Pico 2, starting at the top left with the USB port facing up.</p></div>
+      <figure class="fig">
+      <svg viewBox="0 0 680 430" role="img" aria-label="Four wires between a Pico 2 and the LSM6DSOX breakout: the breakout's SDA pad to GP0 at pin 1, SCL to GP1 at pin 2, GND to pin 3, and VIN to 3V3 OUT at pin 36. VBUS at pin 40 is not used.">
+        <rect x="60" y="150" width="220" height="110" rx="8" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <rect x="52" y="190" width="10" height="28" rx="2" fill="currentColor" opacity=".35"/>
+        <rect x="278" y="190" width="10" height="28" rx="2" fill="currentColor" opacity=".35"/>
+        <text x="170" y="180" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">LSM6DSOX breakout</text>
+        <text x="170" y="197" text-anchor="middle" font-size="10.5" fill="currentColor" opacity=".75">Adafruit 4438 · answers at 0x6A</text>
+        <text x="170" y="232" text-anchor="middle" font-size="9.5" fill="currentColor" opacity=".7">STEMMA QT sockets on both ends</text>
+        <g fill="currentColor"><rect x="80" y="250" width="10" height="10"/><rect x="120" y="250" width="10" height="10"/><rect x="160" y="250" width="10" height="10"/><rect x="200" y="250" width="10" height="10"/><rect x="240" y="250" width="10" height="10"/></g>
+        <g font-size="11" text-anchor="middle" fill="currentColor"><text x="85" y="278">VIN</text><text x="125" y="278">3Vo</text><text x="165" y="278">GND</text><text x="205" y="278">SCL</text><text x="245" y="278">SDA</text></g>
+        <text x="125" y="291" font-size="9" text-anchor="middle" fill="currentColor" opacity=".6">unused</text>
+        <rect x="420" y="30" width="180" height="360" rx="6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <rect x="490" y="18" width="40" height="24" rx="3" fill="currentColor" opacity=".3"/>
+        <text x="510" y="12" text-anchor="middle" font-size="10" fill="currentColor">micro-USB</text>
+        <rect x="496" y="70" width="28" height="16" rx="3" fill="none" stroke="currentColor"/>
+        <text x="510" y="99" text-anchor="middle" font-size="9" fill="currentColor">BOOTSEL</text>
+        <circle cx="468" cy="52" r="4" fill="currentColor" opacity=".6"/>
+        <text x="468" y="68" text-anchor="middle" font-size="9" fill="currentColor" opacity=".8">LED</text>
+        <text x="510" y="245" text-anchor="middle" font-size="16" font-weight="700" fill="currentColor">Pico 2</text>
+        <text x="510" y="262" text-anchor="middle" font-size="9.5" fill="currentColor" opacity=".7">pin 1 is top-left, beside the USB</text>
+        <g fill="currentColor" opacity=".35"><rect x="429" y="65" width="6" height="6"/><rect x="585" y="65" width="6" height="6"/><rect x="429" y="81" width="6" height="6"/><rect x="585" y="81" width="6" height="6"/><rect x="429" y="97" width="6" height="6"/><rect x="585" y="97" width="6" height="6"/><rect x="429" y="113" width="6" height="6"/><rect x="585" y="113" width="6" height="6"/><rect x="429" y="129" width="6" height="6"/><rect x="585" y="129" width="6" height="6"/><rect x="429" y="145" width="6" height="6"/><rect x="585" y="145" width="6" height="6"/><rect x="429" y="161" width="6" height="6"/><rect x="585" y="161" width="6" height="6"/><rect x="429" y="177" width="6" height="6"/><rect x="585" y="177" width="6" height="6"/><rect x="429" y="193" width="6" height="6"/><rect x="585" y="193" width="6" height="6"/><rect x="429" y="209" width="6" height="6"/><rect x="585" y="209" width="6" height="6"/><rect x="429" y="225" width="6" height="6"/><rect x="585" y="225" width="6" height="6"/><rect x="429" y="241" width="6" height="6"/><rect x="585" y="241" width="6" height="6"/><rect x="429" y="257" width="6" height="6"/><rect x="585" y="257" width="6" height="6"/><rect x="429" y="273" width="6" height="6"/><rect x="585" y="273" width="6" height="6"/><rect x="429" y="289" width="6" height="6"/><rect x="585" y="289" width="6" height="6"/><rect x="429" y="305" width="6" height="6"/><rect x="585" y="305" width="6" height="6"/><rect x="429" y="321" width="6" height="6"/><rect x="585" y="321" width="6" height="6"/><rect x="429" y="337" width="6" height="6"/><rect x="585" y="337" width="6" height="6"/><rect x="429" y="353" width="6" height="6"/><rect x="585" y="353" width="6" height="6"/><rect x="429" y="369" width="6" height="6"/><rect x="585" y="369" width="6" height="6"/></g>
+        <g font-size="11" fill="currentColor">
+          <text x="444" y="72">1 · GP0</text><text x="444" y="88">2 · GP1</text><text x="444" y="104">3 · GND</text><text x="444" y="376" opacity=".55">20 · GP15</text>
+          <text x="576" y="72" text-anchor="end">VBUS · 40</text><text x="576" y="104" text-anchor="end">GND · 38</text><text x="576" y="136" text-anchor="end">3V3 OUT · 36</text><text x="576" y="376" text-anchor="end" opacity=".55">GP16 · 21</text>
+        </g>
+        <g fill="none" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M245 255 V290 H388 V68 H427" style="stroke:var(--sda)"/>
+          <path d="M205 255 V306 H404 V84 H427" style="stroke:var(--scl)"/>
+          <path d="M165 255 V322 H412 V100 H427" stroke="currentColor"/>
+          <path d="M85 255 V406 H616 V132 H593" style="stroke:var(--vin)"/>
+        </g>
+        <circle cx="432" cy="68" r="5" style="fill:var(--sda)"/><circle cx="432" cy="84" r="5" style="fill:var(--scl)"/><circle cx="432" cy="100" r="5" fill="currentColor"/><circle cx="588" cy="132" r="5" style="fill:var(--vin)"/>
+        <circle cx="588" cy="68" r="5" fill="none" stroke-width="1.5" stroke-dasharray="2 2" style="stroke:var(--vin)"/>
+        <text x="608" y="72" font-size="9.5" style="fill:var(--vin)">not this one</text>
+        <g font-size="11" font-weight="700">
+          <text x="316" y="285" text-anchor="middle" style="fill:var(--sda)">SDA → GP0</text>
+          <text x="300" y="318" text-anchor="middle" style="fill:var(--scl)">SCL → GP1</text>
+          <text x="290" y="334" text-anchor="middle" fill="currentColor">GND → pin 3</text>
+          <text x="350" y="400" text-anchor="middle" style="fill:var(--vin)">VIN ← 3V3 OUT, pin 36</text>
+        </g>
+      </svg>
+      <figcaption>Four wires. Data and clock come from the two pins beside the USB port, ground from the pin below them, and power from 3V3 OUT on the other side. VBUS, the pin at the top right, is 5 V and never goes to the sensor.</figcaption>
+      </figure>
+      <div class="tbl" style="margin-left:34px"><table>
+        <thead><tr><th>Pico 2</th><th>Physical pin</th><th>LSM6DSOX breakout</th><th>What it is</th></tr></thead>
+        <tbody>
+          <tr><td class="m">GP0</td><td class="m">1</td><td class="m">SDA</td><td>Data</td></tr>
+          <tr><td class="m">GP1</td><td class="m">2</td><td class="m">SCL</td><td>Clock</td></tr>
+          <tr><td class="m">3V3 (OUT)</td><td class="m">36</td><td class="m">VIN</td><td>Power. The breakout regulates it down itself, so VIN is correct</td></tr>
+          <tr><td class="m">GND</td><td class="m">3, or any GND</td><td class="m">GND</td><td>Ground. Use a pin marked GND</td></tr>
+        </tbody></table></div>
+      <div class="d"><p>The breakout answers at address <code>0x6A</code> as shipped. The example on the start page uses GP4 and GP5 for the same job; both are fine, the code decides which pins are the bus. Never feed anything from VBUS (pin 40, 5 V). Keep this tutorial circuit at 3.3 V; follow the selected breakout documentation.</p></div></li>
+
+    <li class="step"><label><input type="checkbox" id="w2"><span class="t">Build the sensor program</span></label>
+<div class="d"><p><b>Before building:</b> use <a href="onboard-main.patch">onboard-main.patch</a> from the corrected guide bundle. It was checked against upstream commit <code>01c49fb</code>. Apply it once in a clean source checkout; if <code>git apply --check</code> fails, stop and compare your source rather than forcing it or discarding someone's changes. The bundle includes corrected source as an alternative.</p></div>
+      <div class="code"><button class="copy" type="button">Copy</button><pre>cd ~
+git clone https://github.com/seds-umd/onboard.git
+cd onboard
+# Replace /path/to with the folder containing the corrected guide bundle.
+git apply --check /path/to/onboard-main.patch
+git apply /path/to/onboard-main.patch
+cmake -S . -B build-local-pico2 -DPICO_BOARD=pico2
+cmake --build build-local-pico2 -j4</pre></div>
+      <div class="d"><p>The repository contains another machine's generated <code>build</code> folder. Leave it alone and use the new <code>build-local-pico2</code> directory above; CMake caches are not portable. Your output is <code>build-local-pico2/pico_sensors.uf2</code>. The repository selects Pico 2 and RP2350 ARM in <code>CMakeLists.txt</code>, so this guide targets a non-wireless Pico 2. Ask before adapting it for an original Pico or a wireless board.</p></div></li>
+
+    <li class="step"><label><input type="checkbox" id="w3"><span class="t">Flash it, either way</span></label>
+      <figure class="fig wide">
+      <svg viewBox="0 0 760 150" role="img" aria-label="Source files are compiled on the laptop into a .uf2 file. The file reaches the Pico 2 either by dragging it onto the RP2350 drive or with picotool. The running program talks back over USB serial to a terminal on the laptop.">
+        <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+        <g fill="none" stroke="currentColor" stroke-width="1.5"><rect x="10" y="40" width="150" height="62" rx="6"/><rect x="270" y="40" width="140" height="62" rx="6"/><rect x="520" y="40" width="100" height="62" rx="6"/><rect x="680" y="40" width="76" height="62" rx="6"/></g>
+        <g fill="currentColor" text-anchor="middle">
+          <text x="85" y="64" font-size="12" font-weight="700">main.c, imu.c</text><text x="85" y="82" font-size="11">CMakeLists.txt</text>
+          <text x="340" y="64" font-size="12" font-weight="700">pico_sensors.uf2</text><text x="340" y="82" font-size="11">the program</text>
+          <text x="570" y="64" font-size="12" font-weight="700">Pico 2</text><text x="570" y="82" font-size="11">runs it</text>
+          <text x="718" y="64" font-size="12" font-weight="700">screen</text><text x="718" y="82" font-size="11">terminal</text>
+        </g>
+        <g stroke="currentColor" stroke-width="1.5" fill="none" marker-end="url(#ar)"><path d="M160 71 H268"/><path d="M410 56 H518"/><path d="M410 88 H518"/><path d="M620 71 H678"/></g>
+        <g fill="currentColor" font-size="10" text-anchor="middle">
+          <text x="214" y="63">cmake .. &amp;&amp; make</text>
+          <text x="464" y="48">BOOTSEL + drag</text>
+          <text x="464" y="104">picotool load -f -x</text>
+          <text x="649" y="63">USB serial</text>
+          <text x="649" y="86">115200</text>
+        </g>
+        <g stroke="currentColor" opacity=".35"><path d="M10 116 H410"/><path d="M520 116 H620"/><path d="M680 116 H756"/></g>
+        <g fill="currentColor" font-size="9.5" text-anchor="middle" opacity=".65"><text x="210" y="130">your laptop</text><text x="570" y="130">the board</text><text x="718" y="130">your laptop</text></g>
+      </svg>
+      <figcaption>The whole loop. Your laptop compiles, the file crosses over USB one of two ways, and the board's printed output comes back over the same cable.</figcaption>
+      </figure>
+      <div class="os"><span>With the button</span></div>
+      <div class="d"><p>Unplug the Pico. Hold BOOTSEL, plug it in, let go. It appears as a USB drive called <code>RP2350</code>. Drag <code>pico_sensors.uf2</code> onto it and the board reboots into your program.</p></div>
+      <div class="os"><span>With picotool</span></div>
+      <div class="code"><button class="copy" type="button">Copy</button><pre>picotool load -f -x build-local-pico2/pico_sensors.uf2</pre></div>
+      <div class="d"><p><code>-f</code> asks a board that is already running something to drop into bootloader mode over USB, and <code>-x</code> runs the new program straight away. On Linux you may need <code>sudo</code> the first time, or the udev rule from the <a href="https://github.com/raspberrypi/picotool">picotool readme</a>.</p></div></li>
+
+    <li class="step"><label><input type="checkbox" id="w4"><span class="t">Open the serial port and watch gravity</span></label>
+      <div class="os"><span>Ubuntu / WSL</span></div>
+      <div class="code"><button class="copy" type="button">Copy</button><pre>screen /dev/ttyACM0 115200</pre></div>
+      <div class="os"><span>macOS</span></div>
+      <div class="code"><button class="copy" type="button">Copy</button><pre>screen /dev/tty.usbmodem* 115200</pre></div>
+      <div class="d"><p>The program waits until a terminal connects before it does anything, so nothing is wrong if the LED stays quiet. Once you are in you get <code>Pico 2 sensor demo: LSM6DSOX</code> and then ten lines a second: three accelerations in g and three rotation rates in degrees per second. Hold the board flat and one axis reads about 1.00. Tilt it and that 1.00 moves to another axis. Twist it and the gyro numbers jump. To leave <code>screen</code>, press ctrl-A then K, then y.</p></div>
+      <div class="code labelled" style="margin-top:4px"><span class="lab">What you should see</span><pre>Pico 2 sensor demo: LSM6DSOX
+IMU  A[g]   0.02  -0.01   1.00  G[dps]     0.3    -0.1     0.2
+---
+IMU  A[g]   0.03   0.00   0.99  G[dps]     0.1     0.2    -0.3
+---</pre></div>
+      <div class="d"><p>Board flat on the desk: the third acceleration is about 1.00 g and the gyro numbers hover near zero. With the program exactly as published, the first acceleration has a known format-string error. Apply the supplied <code>onboard-main.patch</code> before treating the numbers as valid. The corrected version prints a sample only after a successful read.</p></div></li>
+
+    <li class="step"><label><input type="checkbox" id="w5"><span class="t">Make it yours: the first pull request</span></label>
+      <div class="d"><p>The program has real rough edges, and fixing one is the shortest path to your first contribution. Branch, change, push, open a pull request against <a href="https://github.com/seds-umd/onboard">onboard</a>, and ask in the channel for a look. Pick one:</p>
+      <p><b>The format-string correction is supplied.</b> <code>onboard-main.patch</code> changes <code>%6C.2f</code> to <code>%6.2f</code>, avoids repeated initialization on error, and skips failed reads. It also corrects the gyroscope full-scale register encodings so degrees-per-second scaling matches the selected range. It is a local patch, not a merged upstream change. For a student contribution, document your setup or add a demonstrated feature instead of duplicating this fix.</p>
+      <p><b>Two sensors are wired up in code and switched off.</b> The repository has drivers for the <a href="https://www.adafruit.com/product/5579">MMC5603 magnetometer</a> (address <code>0x30</code>) and the <a href="https://www.adafruit.com/product/1893">MPL3115A2 barometer</a> (address <code>0x60</code>), commented out in <code>main.c</code>. Chain one onto the same bus with a STEMMA QT cable, check its voltage, address and identity, handle initialization/read errors, then enable its block and print valid data next to the IMU's. Do not enable a driver for hardware you have not connected.</p>
+      <figure class="fig" style="margin-top:4px">
+      <svg viewBox="0 0 680 175" role="img" aria-label="One I2C bus from the Pico 2's GP0 and GP1 with three devices on it: the LSM6DSOX at address 0x6A, running; the MMC5603 at 0x30 and the MPL3115A2 at 0x60, present in the code but commented out.">
+        <rect x="10" y="38" width="110" height="64" rx="6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <text x="65" y="62" text-anchor="middle" font-size="12" font-weight="700" fill="currentColor">Pico 2</text>
+        <text x="65" y="80" text-anchor="middle" font-size="10.5" fill="currentColor">I2C0 at 400 kHz</text>
+        <g stroke-width="2.5" fill="none"><path d="M120 55 H660" style="stroke:var(--sda)"/><path d="M120 85 H660" style="stroke:var(--scl)"/></g>
+        <text x="128" y="50" font-size="10.5" font-weight="700" style="fill:var(--sda)">SDA · GP0</text>
+        <text x="128" y="99" font-size="10.5" font-weight="700" style="fill:var(--scl)">SCL · GP1</text>
+        <text x="660" y="34" text-anchor="end" font-size="9.5" fill="currentColor" opacity=".7">pull-ups to 3.3 V sit on the breakout; the Pico adds its own</text>
+        <g stroke="currentColor" stroke-width="1.5" fill="none">
+          <path d="M253 55 V120" style="stroke:var(--sda)"/><path d="M277 85 V120" style="stroke:var(--scl)"/>
+          <path d="M423 55 V120" style="stroke:var(--sda)"/><path d="M447 85 V120" style="stroke:var(--scl)"/>
+          <path d="M593 55 V120" style="stroke:var(--sda)"/><path d="M617 85 V120" style="stroke:var(--scl)"/>
+        </g>
+        <g><circle cx="253" cy="55" r="3" style="fill:var(--sda)"/><circle cx="423" cy="55" r="3" style="fill:var(--sda)"/><circle cx="593" cy="55" r="3" style="fill:var(--sda)"/><circle cx="277" cy="85" r="3" style="fill:var(--scl)"/><circle cx="447" cy="85" r="3" style="fill:var(--scl)"/><circle cx="617" cy="85" r="3" style="fill:var(--scl)"/></g>
+        <rect x="200" y="120" width="130" height="44" rx="6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <rect x="370" y="120" width="130" height="44" rx="6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <rect x="540" y="120" width="130" height="44" rx="6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <g fill="currentColor" text-anchor="middle">
+          <text x="265" y="138" font-size="11.5" font-weight="700">LSM6DSOX</text><text x="265" y="155" font-size="10">0x6A · running</text>
+          <text x="435" y="138" font-size="11.5" font-weight="700">MMC5603</text><text x="435" y="155" font-size="10">0x30 · commented out</text>
+          <text x="605" y="138" font-size="11.5" font-weight="700">MPL3115A2</text><text x="605" y="155" font-size="10">0x60 · commented out</text>
+        </g>
+      </svg>
+      <figcaption>Why chaining works: every I2C device hangs off the same two wires and answers to its own address. The dashed two already have drivers in the repository and only need their block in main.c switched back on.</figcaption>
+      </figure>
+      <p><b>There is no readme.</b> Write the one you wish you had an hour ago: what the program does, how to wire it, how to build and flash it.</p>
+      <p><b>Every constant came from a datasheet.</b> Open <code>include/imu.h</code> and the <a href="https://www.st.com/resource/en/datasheet/lsm6dsox.pdf">LSM6DSOX datasheet</a> side by side, find where the <code>0x6C</code> identity byte and the <code>0x10</code> control register come from, and change the accelerometer range from 2 g to 16 g. Finding those lines in a 150-page PDF is the actual skill.</p></div></li>
+  </ul>
+  <p class="note lead"><b>If you are running the session.</b> Have one known-good Pico and sensor wired before people arrive. The first failure is almost always the cable, the second is SDA and SCL swapped, the third is a laptop that cannot see the board from WSL. The serial step is where people stall, because the program prints nothing until a terminal is attached; say that out loud before anyone plugs in.</p>
+</section>
+
+<section id="after">
+  <div class="sec-head"><span class="eyebrow">03 · After the sessions</span><h2>Where this goes</h2></div>
+  <p class="who">The fall balloon payload is being rebuilt as a proper board with new firmware, and most of the work is open. Here is what exists as of 13 October and where each piece starts. Repositories marked <b>org access</b> need the GitHub invite from the first section.</p>
+  <div class="cards">
+    <div class="card"><span class="state">Schematic drawn · layout next</span><h3>The motherboard</h3>
+      <p>Zarif's schematic for the fall board, in <a href="https://github.com/seds-umd/bpp-fall2026-hw">bpp-fall2026-hw</a> (org access): an RP2350A, the same chip as the Pico 2, with an LSM6DSO32 IMU, an MMC5633 magnetometer, an MS5607 barometer, two 16 MB flash chips, an 8-channel analog multiplexer for thermistors and panel voltages, I2C headers for a GPS and a real-time clock, a debug header, USB and a battery terminal. Eight analog inputs, six digital pins and one I2C bus are exposed. The layout starts the week of 13 October.</p>
+      <p class="start"><b>Start</b> Clone it, open it in <a href="https://www.kicad.org/download/">KiCad</a>, and run the electrical rules check. Then read the <a href="https://datasheets.raspberrypi.com/rp2350/hardware-design-with-rp2350.pdf">RP2350 hardware design guide</a> next to the schematic.</p></div>
+    <div class="card"><span class="state">Scaffold · every file open</span><h3>The firmware</h3>
+      <p><a href="https://github.com/seds-umd/bpp-fall26">bpp-fall26</a> (org access) is the firmware for that board. Right now it is a <code>main.c</code> that starts the watchdog and six empty files: the multiplexer reader, flash logging, the GPS driver, a position estimate, telemetry. The delivered <a href="https://github.com/seds-umd/obc-firmware">obc-firmware</a> has working versions of the multiplexer, flash and telemetry code to port from, and the bugs we found in April's data are known and written down on <a href="https://claude.ai/artifact/KEMmX8K1wVGGwrST2evCQN#tasks">the work page</a>.</p>
+      <p class="start"><b>Start</b> Pick one empty file. The multiplexer reader is the smallest and the most useful, because the sensors you breadboarded hang off the same I2C bus the board will use.</p></div>
+    <div class="card"><span class="state">Part chosen · driver needed</span><h3>The GPS</h3>
+      <p>A <a href="https://www.sparkfun.com/sparkfun-gps-breakout-neo-m9n-chip-antenna-qwiic.html">SparkFun NEO-M9N breakout</a> plugs into the board's I2C header. It needs a driver that talks u-blox's UBX protocol over I2C, and it needs the airborne dynamic model switched on, because the default setting stops reporting a position near 12 km and the balloon goes past 30.</p>
+      <p class="start"><b>Start</b> Read the <a href="https://content.u-blox.com/sites/default/files/u-blox-M9-SPG-4.04_InterfaceDescription_UBX-21022436.pdf">u-blox M9 interface description</a>, section on UBX-CFG-VALSET and the dynamic model, then the <a href="https://github.com/sparkfun/SparkFun_u-blox_GNSS_Arduino_Library">SparkFun library</a> for how they drive it over I2C. The driver is <code>gps.c</code> in the firmware.</p></div>
+    <div class="card"><span class="state">Board on hand · bring-up</span><h3>The FPGA GPS receiver</h3>
+      <p>Our own receiver in logic, which works in simulation and has not run on a board since 2024. An Arty S7-25 development board is arriving this month, so the design in <a href="https://github.com/seds-umd/gps-rtl">gps-rtl</a> can go back onto hardware.</p>
+      <p class="start"><b>Start</b> Talk to Jaiden. Install <a href="https://www.amd.com/en/products/software/adaptive-socs-and-fpgas/vivado.html">Vivado</a> if you have the disk space; the simulation side needs only Java 17, sbt, cocotb and Icarus.</p></div>
+    <div class="card"><span class="state">Biggest gap · owner reading in</span><h3>The radio and ground station</h3>
+      <p>The payload talks through an <a href="https://github.com/OpenLST/openlst">OpenLST</a> radio at about 437 MHz, and nobody on the team has yet heard it from the ground. The antenna and a receiver are being researched now, including a deployable antenna design borrowed from the <a href="https://github.com/Quetzal-1-CubeSat-Team/quetzal1-hardware">Quetzal-1 CubeSat</a>, which flew. Whoever operates the radio needs an amateur radio licence.</p>
+      <p class="start"><b>Start</b> Ask in the channel who is on it and join them. <a href="https://github.com/seds-umd/openlst-software">openlst-software</a> and the <a href="https://www.ti.com/lit/ds/symlink/cc1110f32.pdf">CC1110 datasheet</a> are the reading.</p></div>
+    <div class="card"><span class="state">Target date</span><h3>The flight</h3>
+      <p>The latest balloon launch date from the <a href="https://bpp.umd.edu/">Balloon Payload Program</a> is 7 to 8 November, which Shrika passed on at the end of September. It is tentative and it is soon. Everything above is sized against it.</p>
+      <p class="start"><b>Start</b> If you want to work on requirements and the telemetry frame rather than code, <a href="https://claude.ai/artifact/KEMmX8K1wVGGwrST2evCQN#lanes">the lanes on the work page</a> say where that goes.</p></div>
+  </div>
+
+  <h3 style="margin-top:6px">How the fall board hangs together</h3>
+  <figure class="fig wide">
+  <svg viewBox="0 0 760 450" role="img" aria-label="Block diagram of the fall motherboard from the 13 October schematic. An RP2350A in the middle boots from a QSPI program flash, logs to a second flash over SPI0, takes 3.3 volts from an LDO fed by USB or a battery, exposes USB, an SWD debug header and reset, reads eight analog inputs through a multiplexer into ADC0, drives one I2C bus shared by the IMU, magnetometer, barometer, GPS header and RTC header, and brings a second I2C bus plus six GPIO to a connector.">
+    <defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+    <g fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="40" y="30" width="210" height="46" rx="6"/><rect x="275" y="30" width="210" height="46" rx="6"/><rect x="510" y="30" width="210" height="46" rx="6"/>
+      <rect x="290" y="180" width="180" height="100" rx="8" stroke-width="2.5"/>
+      <rect x="20" y="140" width="170" height="40" rx="6"/><rect x="20" y="210" width="170" height="40" rx="6"/><rect x="20" y="280" width="170" height="40" rx="6"/>
+      <rect x="580" y="140" width="170" height="36" rx="6"/><rect x="580" y="190" width="170" height="36" rx="6"/><rect x="580" y="240" width="170" height="36" rx="6"/><rect x="580" y="290" width="170" height="36" rx="6"/><rect x="580" y="340" width="170" height="36" rx="6"/>
+      <rect x="20" y="380" width="170" height="46" rx="6"/><rect x="230" y="380" width="190" height="46" rx="6"/><rect x="460" y="380" width="170" height="46" rx="6"/>
+    </g>
+    <g fill="currentColor" text-anchor="middle">
+      <text x="145" y="49" font-size="12" font-weight="700">Program flash</text><text x="145" y="66" font-size="10">W25Q128 · QSPI · boots from here</text>
+      <text x="380" y="49" font-size="12" font-weight="700">USB 5 V or battery</text><text x="380" y="66" font-size="10">BD33GA3WEFJ regulator → 3.3 V</text>
+      <text x="615" y="49" font-size="12" font-weight="700">Data flash</text><text x="615" y="66" font-size="10">W25Q32 · SPI0 · GPIO0 to 3</text>
+      <text x="380" y="222" font-size="15" font-weight="700">RP2350A</text><text x="380" y="240" font-size="10">the Pico 2's chip, on its own</text><text x="380" y="256" font-size="10" opacity=".7">QFN-60</text>
+      <text x="105" y="157" font-size="11.5" font-weight="700">USB micro-B</text><text x="105" y="172" font-size="9.5">flashing, serial console</text>
+      <text x="105" y="227" font-size="11.5" font-weight="700">SWD debug header</text><text x="105" y="242" font-size="9.5">Picoprobe, OpenOCD</text>
+      <text x="105" y="297" font-size="11.5" font-weight="700">Reset, BOOTSEL</text><text x="105" y="312" font-size="9.5">button and jumper</text>
+      <text x="665" y="162" font-size="11">LSM6DSO32 IMU</text><text x="665" y="212" font-size="11">MMC5633 magnetometer</text><text x="665" y="262" font-size="11">MS5607 barometer</text><text x="665" y="312" font-size="11">GPS header → NEO-M9N</text><text x="665" y="362" font-size="11">RTC header</text>
+      <text x="105" y="399" font-size="11.5" font-weight="700">J1 · 8 analog inputs</text><text x="105" y="415" font-size="9.5">thermistors, panel voltages</text>
+      <text x="325" y="399" font-size="11.5" font-weight="700">CD74HC4067</text><text x="325" y="415" font-size="9.5">analog multiplexer, 8 inputs used</text>
+      <text x="545" y="399" font-size="11.5" font-weight="700">J2 · GPIO connector</text><text x="545" y="415" font-size="9.5">SDA1/SCL1 on GPIO8/9 (i2c0) + IO0 to IO5</text>
+    </g>
+    <g fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#ar2)">
+      <path d="M145 76 V130 H345 V178"/><path d="M380 76 V178"/><path d="M615 76 V130 H415 V178"/>
+      <path d="M190 160 H240 V200 H288"/><path d="M190 230 H288"/><path d="M190 300 H240 V260 H288"/>
+      <path d="M470 215 H558"/>
+      <path d="M190 403 H228"/><path d="M325 380 V282"/><path d="M440 280 V320 H545 V378"/>
+    </g>
+    <path d="M560 150 V358" fill="none" stroke-width="2.5" style="stroke:var(--sda)"/>
+    <g stroke-width="1.5" fill="none" style="stroke:var(--sda)"><path d="M560 158 H580"/><path d="M560 208 H580"/><path d="M560 258 H580"/><path d="M560 308 H580"/><path d="M560 358 H580"/></g>
+    <g style="fill:var(--sda)"><circle cx="560" cy="158" r="3"/><circle cx="560" cy="208" r="3"/><circle cx="560" cy="258" r="3"/><circle cx="560" cy="308" r="3"/><circle cx="560" cy="358" r="3"/></g>
+    <g fill="currentColor" font-size="9.5">
+      <text x="300" y="124" text-anchor="middle">QSPI</text><text x="392" y="128">3V3</text><text x="520" y="124" text-anchor="middle">SPI0</text>
+      <text x="238" y="154" text-anchor="middle">USB_DP / USB_DM</text><text x="239" y="224" text-anchor="middle">SWCLK / SWDIO</text><text x="238" y="294" text-anchor="middle">RUN / QSPI_CS</text>
+      <text x="514" y="209" text-anchor="middle" font-weight="700">SDA0/SCL0 · GPIO6/7 (i2c1)</text>
+      <text x="335" y="336">AMUX_IN → ADC0, GPIO26</text><text x="335" y="350">select lines GPIO19 to 21</text>
+      <text x="470" y="314">I2C1 + six GPIO</text>
+    </g>
+  </svg>
+  <figcaption>What the board connects to the chip, from the schematic as of 13 October. Every sensor and both headers share one I2C bus, which is the same bus you breadboarded; the multiplexer folds eight analog inputs into one ADC pin, the way April's payload did.</figcaption>
+  </figure>
+  <h3 style="margin-top:6px">Who to ask</h3>
+  <div class="people">
+    <div class="person"><b>Zarif Gudikal</b>Avionics lead. The flight computer, the board, the radio, and the longest history on all of it.</div>
+    <div class="person"><b>Jaiden Nguyen</b>Incoming avionics lead. Onboarding, firmware, the GPS receiver, GitHub org invites.</div>
+    <div class="person"><b>Shrika Bellidiga</b>SATFAB lead. The flight, the schedule, lab access, purchasing, reports.</div>
+    <div class="person"><b>Dhruv Agarwal</b>Power subteam and club leadership. Batteries, solar, purchasing.</div>
+  </div>
+  <p class="note">Ask in the avionics channel rather than by direct message, so the answer is on the record for the next person. Tasks live at <a href="https://project.seds.umd.edu/">project.seds.umd.edu</a>; claim one in the channel before you start it.</p>
+</section>
+
+<section id="trouble">
+  <div class="sec-head"><span class="eyebrow">04 · When it breaks</span><h2>The failures people actually hit</h2></div>
+  <ul class="trouble">
+    <li><b>-bash: /opt/ros/iron/setup.bash: No such file or directory</b>A line from an earlier course is still in your <code>~/.bashrc</code>. It is harmless. To stop seeing it, <code>nano ~/.bashrc</code>, delete the line that mentions ros, ctrl-O, ctrl-X.</li>
+    <li><b>PICO_SDK_PATH not set</b>Your shell has not picked up the export line. Close the terminal, open a new one, run <code>echo $PICO_SDK_PATH</code>. If it prints nothing, the line went into <code>.bashrc</code> on a machine that uses zsh, or the other way round.</li>
+    <li><b>CMake Error: The source directory does not match the source used to generate cache</b>You ran <code>cmake</code> inside a <code>build</code> folder that came from another computer. Leave that cache alone and configure a new directory, for example <code>cmake -S . -B build-local-pico2 -DPICO_BOARD=pico2</code>, from the source root.</li>
+    <li><b>The board never shows up, or shows up and vanishes</b>The cable. Charge-only micro-USB cables are indistinguishable from data cables by eye. Try another one before anything else. On WSL, the board also has to be attached with usbipd before Linux can see it.</li>
+    <li><b>picotool: No accessible RP2350 devices in BOOTSEL mode were found</b>Add <code>-f</code> so it reboots the board for you, or hold BOOTSEL while plugging in. On Linux, run it with <code>sudo</code> once or install the udev rule.</li>
+    <li><b>LSM6DSOX init failed</b>If the message says the identity byte was wrong, the chip answered but it is not the expected part. If it said <code>0x69</code> you have an LSM6DS33 breakout, which is a different part. If the init fails with a bus error instead, check SDA and SCL are not swapped and that VIN has 3.3 V.</li>
+    <li><b>screen: cannot open /dev/ttyACM0</b>The port appears only after the program starts, and only once the board is plugged in normally, not in BOOTSEL mode. <code>ls /dev/ttyACM*</code> to see what is there. On a Mac the name starts with <code>/dev/tty.usbmodem</code>.</li>
+    <li><b>Mac: zsh: command not found: brew</b>Homebrew is not installed, or the terminal was opened before it was. Open a new terminal; if it still fails, take route B or C in <a href="#mac">the Mac section</a>.</li>
+    <li><b>Mac: "arm-none-eabi-gcc" cannot be opened because the developer cannot be verified, or just "killed"</b>Gatekeeper quarantined the downloaded toolchain. Run <code>xattr -dr com.apple.quarantine ~/pico/arm-gnu-toolchain-*</code> once and try again.</li>
+    <li><b>Mac: screen says the port is busy, or shows nothing after a reflash</b>An earlier screen is still attached to it. Quit it with ctrl-A, K, Y, or close every terminal tab that opened the port, then unplug and replug the board.</li>
+    <li><b>Nothing prints</b>The program is waiting for you. It does not start until a terminal is attached, by design, so you never miss the first lines.</li>
+    <li><b>The first acceleration column is nonsense</b>Verify that the supplied <code>onboard-main.patch</code> was applied before building. Rebuild the corrected source and flash that output; do not trust the malformed upstream column.</li>
+  </ul>
+</section>
+
+<section id="sheet">
+  <div class="sec-head"><span class="eyebrow">05 · Session sheet</span><h2>Where everyone is</h2></div>
+  <p class="who">A tally for whoever is running the sessions. It is saved in this browser only, so keep it on one laptop. Names and ticks stay until you clear them.</p>
+  <div class="tbl sheet-tbl"><table id="roster">
+    <thead><tr><th>Name</th><th class="c">GitHub + TerpLink</th><th class="c">Shell + compiler</th><th class="c">SDK + blink</th><th class="c">picotool</th><th class="c">Breadboard reads</th><th class="c">First PR</th></tr></thead>
+    <tbody></tbody>
+  </table></div>
+  <div style="display:flex; gap:8px; flex-wrap:wrap">
+    <button class="btn" id="addrow" type="button">Add a row</button>
+    <button class="btn" id="clearsheet" type="button">Clear the sheet</button>
+  </div>
+</section>
+
+</main>
+
+<footer><span>SATFAB Avionics · SEDS@UMD · maintained by Jaiden Nguyen</span><span>Updated 13 October 2026</span></footer>
+</div>
+
+<script>
+(function(){"use strict";
+var KEY="avi-sessions-v1";
+var state={};
+try{ state=JSON.parse(localStorage.getItem(KEY)||"{}")||{}; }catch(e){ state={}; }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+
+/* step ticks */
+var boxes=[].slice.call(document.querySelectorAll('.step input[type=checkbox]'));
+var countEl=document.getElementById('count');
+function paint(){
+  var n=0;
+  boxes.forEach(function(b){ b.closest('.step').classList.toggle('done', b.checked); if(b.checked) n++; });
+  countEl.textContent=n+" of "+boxes.length+" done";
+}
+boxes.forEach(function(b){
+  b.checked=!!state[b.id];
+  b.addEventListener('change',function(){ state[b.id]=b.checked; save(); paint(); });
+});
+document.getElementById('clear').addEventListener('click',function(){
+  boxes.forEach(function(b){ b.checked=false; delete state[b.id]; });
+  save(); paint();
+});
+paint();
+
+/* copy buttons */
+[].slice.call(document.querySelectorAll('.code .copy')).forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var pre=btn.parentNode.querySelector('pre');
+    var text=pre.textContent;
+    function done(ok){ btn.textContent= ok ? "Copied" : "Select and copy"; setTimeout(function(){ btn.textContent="Copy"; },1600); }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){ done(true); }, function(){ selectPre(pre); done(false); });
+    } else { selectPre(pre); done(false); }
+  });
+});
+function selectPre(pre){
+  try{ var r=document.createRange(); r.selectNodeContents(pre); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); }catch(e){}
+}
+
+/* session sheet */
+var COLS=6;
+var tbody=document.querySelector('#roster tbody');
+var rows=Array.isArray(state.rows)? state.rows : null;
+if(!rows || !rows.length){ rows=[]; for(var i=0;i<6;i++) rows.push({name:"",t:[false,false,false,false,false,false]}); }
+function render(){
+  tbody.innerHTML="";
+  rows.forEach(function(row,ri){
+    var tr=document.createElement('tr');
+    var td=document.createElement('td');
+    var inp=document.createElement('input'); inp.type='text'; inp.id='name'+ri; inp.placeholder='Name'; inp.value=row.name||"";
+    inp.setAttribute('aria-label','Name, row '+(ri+1));
+    inp.addEventListener('input',function(){ row.name=inp.value; persist(); });
+    td.appendChild(inp); tr.appendChild(td);
+    for(var c=0;c<COLS;c++){
+      (function(c){
+        var cell=document.createElement('td'); cell.className='c';
+        var cb=document.createElement('input'); cb.type='checkbox'; cb.id='r'+ri+'c'+c; cb.checked=!!row.t[c];
+        cb.setAttribute('aria-label','Row '+(ri+1)+', milestone '+(c+1));
+        cb.addEventListener('change',function(){ row.t[c]=cb.checked; persist(); });
+        cell.appendChild(cb); tr.appendChild(cell);
+      })(c);
+    }
+    tbody.appendChild(tr);
+  });
+}
+function persist(){ state.rows=rows; save(); }
+document.getElementById('addrow').addEventListener('click',function(){ rows.push({name:"",t:[false,false,false,false,false,false]}); persist(); render(); });
+document.getElementById('clearsheet').addEventListener('click',function(){ rows=[]; for(var i=0;i<6;i++) rows.push({name:"",t:[false,false,false,false,false,false]}); persist(); render(); });
+render();
+})();
+</script>

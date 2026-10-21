@@ -19,7 +19,7 @@ int main(void)
 {
     stdio_init_all();
     while (!stdio_usb_connected()) { tight_loop_contents(); }
-    printf("Pico 2 sensor demo: LSM6DSOX");
+    printf("Pico 2 sensor demo: LSM6DSOX\n");
 
     i2c_init(i2c0, 400000);
     gpio_set_function(I2C_SDA_PIN, GPIO_FUNC_I2C);
@@ -29,8 +29,10 @@ int main(void)
 
     // = IMU =
     lsm6dsox_t *imu = lsm6dsox_create(i2c0, 0x6A);
-    if (!imu || lsm6dsox_init(imu) != LSM6DSOX_OK)
-        fail("LSM6DSOX init", lsm6dsox_strerror(lsm6dsox_init(imu)));
+    if (!imu) fail("LSM6DSOX create", "invalid parameters or allocation failed");
+    lsm6dsox_error_t init_error = lsm6dsox_init(imu);
+    if (init_error != LSM6DSOX_OK)
+        fail("LSM6DSOX init", lsm6dsox_strerror(init_error));
 /*
     //  Magnetometer
     mmc5603_t *mag = mmc5603_create(i2c0, 0x30);
@@ -50,8 +52,14 @@ int main(void)
     mpl3115a2_data_t baro_d;*/
     lsm6dsox_data_t imu_d;
     while (true) {
-        lsm6dsox_read(imu, &imu_d);
-        printf("IMU  A[g] %6C.2f %6.2f %6.2f  G[dps] %7.1f %7.1f %7.1f\n", imu_d.ax, imu_d.ay, imu_d.az, imu_d.gx, imu_d.gy, imu_d.gz);
+        lsm6dsox_error_t read_error = lsm6dsox_read(imu, &imu_d);
+        if (read_error != LSM6DSOX_OK) {
+            if (read_error != LSM6DSOX_ERR_NO_DATA)
+                printf("IMU read failed: %s\n", lsm6dsox_strerror(read_error));
+            sleep_ms(100);
+            continue;
+        }
+        printf("IMU  A[g] %6.2f %6.2f %6.2f  G[dps] %7.1f %7.1f %7.1f\n", imu_d.ax, imu_d.ay, imu_d.az, imu_d.gx, imu_d.gy, imu_d.gz);
 
         printf("---\n");
         sleep_ms(100);
